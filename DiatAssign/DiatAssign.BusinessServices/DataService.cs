@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DiatAssign.Common.DTOs;
+using DiatAssign.DataModel;
+using DiatAssign.DataModel.Entities;
 
 namespace DiatAssign.BusinessServices
 {
@@ -8,33 +11,47 @@ namespace DiatAssign.BusinessServices
     {
         public IEnumerable<UserDto> GetAllUsers()
         {
-            return new List<UserDto>()
+            using (var dbContext = new DataContext())
             {
-                new UserDto()
-                {
-                    Age = 4,
-                    FirstName = "Stef",
-                    LastName = "Chov",
-                    Id = 4
-                },
-                new UserDto()
-                {
-                    Age = 1,
-                    FirstName = "somene",
-                    LastName = "elseee",
-                    Id = 78
-                }
-            };
+                return
+                    dbContext.Users.Select(
+                        u => new UserDto() {Age = u.Age, Id = u.Id, FirstName = u.FirstName, LastName = u.LastName})
+                        .ToList();
+            }
         }
 
         public void CreateNewUser(NewUserDto newUser)
         {
-            throw new NotImplementedException();
+            using (var dbContext = new DataContext())
+            {
+                var newEntity = new User()
+                {
+                    Age = newUser.Age, FirstName = newUser.FirstName, LastName = newUser.LastName
+                };
+
+                dbContext.Users.Add(newEntity);
+
+                dbContext.SaveChanges();
+            }
         }
 
         public UserDto GetUserById(int userId)
         {
-            throw new NotImplementedException();
+            using (var dbContext = new DataContext())
+            {
+                var result = dbContext.Users.FirstOrDefault(u => u.Id == userId);
+
+                if (result == null)
+                    return null;
+
+                return new UserDto()
+                {
+                    Age = result.Age,
+                    FirstName = result.FirstName,
+                    LastName = result.LastName,
+                    Id = result.Id
+                };
+            }
         }
 
         public void UpdateUser(int userId, UserDto updatedUser)
@@ -44,7 +61,13 @@ namespace DiatAssign.BusinessServices
 
         public void DeleteUser(int userId)
         {
-            throw new NotImplementedException();
+            using (var dbContext = new DataContext())
+            {
+                var toBeDeleted = dbContext.Users.FirstOrDefault(u => u.Id == userId);
+                dbContext.Users.Remove(toBeDeleted);
+
+                dbContext.SaveChanges();
+            }
         }
     }
 }

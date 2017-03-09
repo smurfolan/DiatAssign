@@ -10,7 +10,7 @@ namespace DiatAssign.Controllers
 {
     public class UserController : Controller
     {
-        private IDataService _dataService;
+        private readonly IDataService _dataService;
 
         public UserController(IDataService dataService)
         {
@@ -26,7 +26,7 @@ namespace DiatAssign.Controllers
 
                 return View(allUsers);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // TODO: Log error
                 return View("Error");
@@ -45,7 +45,7 @@ namespace DiatAssign.Controllers
             {
                 this._dataService.CreateNewUser(Mapper.Map<NewUserVm, NewUserDto>(newUser));
 
-                return View("Index");
+                return RedirectToAction("Index", "User");
             }
             catch (Exception)
             {
@@ -61,12 +61,33 @@ namespace DiatAssign.Controllers
 
         public ActionResult Details(int id)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var userInfo = Mapper.Map<UserDto, UserVm>(this._dataService.GetUserById(id));
+
+                return View(userInfo);
+            }
+            catch (Exception)
+            {
+                // TODO: Log error
+                return View("Error");
+            }
+
+            
         }
 
         public ActionResult Delete(int id)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                this._dataService.DeleteUser(id);
+                return RedirectToAction("Index", "User");
+            }
+            catch (Exception)
+            {
+                // TODO: Log error
+                return View("Error");
+            }
         }
     }
 }
