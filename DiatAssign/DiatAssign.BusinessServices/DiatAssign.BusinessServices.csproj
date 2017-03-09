@@ -45,6 +45,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DiatAssign.Common\DiatAssign.Common.csproj">
+      <Project>{8685C9B1-4BE5-4619-9423-5008F1C3853C}</Project>
+      <Name>DiatAssign.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DiatAssign.DataModel\DiatAssign.DataModel.csproj">
       <Project>{b192d355-5b1b-49b2-8997-316dcd2a3f52}</Project>
       <Name>DiatAssign.DataModel</Name>

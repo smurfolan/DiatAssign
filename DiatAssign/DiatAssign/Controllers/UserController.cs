@@ -1,41 +1,57 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
+using AutoMapper;
 using DiatAssign.BusinessServices;
+using DiatAssign.Common.DTOs;
 using DiatAssign.Models;
 
 namespace DiatAssign.Controllers
 {
     public class UserController : Controller
     {
-        //private IDataService _dataService;
+        private IDataService _dataService;
 
-        //public UserController(IDataService dataService)
-        //{
-        //    _dataService = dataService;
-        //}
+        public UserController(IDataService dataService)
+        {
+            _dataService = dataService;
+        }
 
         // GET: User
         public ActionResult Index()
         {
-            var result = new List<UserVm>()
+            try
             {
-                new UserVm()
-                {
-                    Age = 3, FirstName = "Sedsa", LastName = "dsadas", Id = 1
-                },
-                new UserVm()
-                {
-                    Age = 6, FirstName = "Weasda", LastName = "dsadas", Id = 2
-                }
-            };
+                var allUsers = Mapper.Map<IEnumerable<UserDto>, IEnumerable<UserVm>>(this._dataService.GetAllUsers());
 
-            return View(result);
+                return View(allUsers);
+            }
+            catch (Exception)
+            {
+                // TODO: Log error
+                return View("Error");
+            }
         }
 
         public ActionResult Create()
         {
-
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult Create(NewUserVm newUser)
+        {
+            try
+            {
+                this._dataService.CreateNewUser(Mapper.Map<NewUserVm, NewUserDto>(newUser));
+
+                return View("Index");
+            }
+            catch (Exception)
+            {
+                // TODO: Log error
+                return View("Error");
+            }
         }
 
         public ActionResult Edit(int id)
