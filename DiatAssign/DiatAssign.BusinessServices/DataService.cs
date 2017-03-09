@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DiatAssign.Common.DTOs;
 using DiatAssign.DataModel;
@@ -56,7 +55,18 @@ namespace DiatAssign.BusinessServices
 
         public void UpdateUser(int userId, UserDto updatedUser)
         {
-            throw new NotImplementedException();
+            using (var dbContext = new DataContext())
+            {
+                var toBeUpdated = dbContext.Users.FirstOrDefault(u => u.Id == userId);
+                if (toBeUpdated == null)
+                    return;
+
+                toBeUpdated.Age = updatedUser.Age;
+                toBeUpdated.FirstName = updatedUser.FirstName;
+                toBeUpdated.LastName = updatedUser.LastName;
+
+                dbContext.SaveChanges();
+            }
         }
 
         public void DeleteUser(int userId)

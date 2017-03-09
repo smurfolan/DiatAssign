@@ -21,6 +21,7 @@ namespace DiatAssign
         {
             CreateMap<UserDto, UserVm>();
             CreateMap<NewUserVm, NewUserDto>();
+            CreateMap<UserVm, UserDto>();
         }
     }
 }

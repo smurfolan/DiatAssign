@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -29,6 +30,14 @@ namespace DiatAssign
             kernel.Bind<IDataService>().To<DataService>();
 
             return kernel;
+        }
+
+        protected void Application_Error(object sender, EventArgs e)
+        {
+            // TODO: Log error
+            var exception = Server.GetLastError();
+            Server.ClearError();
+            Response.Redirect("/User/Index");
         }
     }
 }
