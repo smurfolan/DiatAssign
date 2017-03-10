@@ -8,6 +8,8 @@ namespace DiatAssign.BusinessServices
 {
     public class DataService : IDataService
     {
+        // What I usually do in this case, up here I use Repository or Unit of Work. This case is not so complex so I decided to skip it.
+
         public IEnumerable<UserDto> GetAllUsers()
         {
             using (var dbContext = new DataContext())

@@ -8,7 +8,7 @@ using DiatAssign.Models;
 
 namespace DiatAssign.Controllers
 {
-    //[ErrorHandle]
+    [ErrorHandle]
     public class UserController : Controller
     {
         private readonly IDataService _dataService;
