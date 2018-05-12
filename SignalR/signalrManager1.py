@@ -37,4 +37,5 @@ with Session() as session:
     with connection:
             peepneeHub.server.invoke('mailRequestAccepted')
             peepneeHub.server.invoke('updateDefaultOwnerSettings', 0, 13)
+            peepneeHub.server.invoke('newMailRequest', 'some_url', 'some_text')
             connection.wait(13)
