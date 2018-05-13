@@ -3,6 +3,10 @@ import ImageDraw
 from PIL import Image
 import time
 import ImageFont
+from loggingManager import *
+
+def log(message, withTimestamp=False):
+    logInfo('displayManager', message, withTimestamp)
 
 HOME_SCREEN = 'semPetroviHome_132_by_300.jpg'
 
