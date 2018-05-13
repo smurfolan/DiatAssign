@@ -2,6 +2,7 @@ from requests import Session
 from signalr import Connection
 import threading
 from loggingManager import *
+from uploadImageManager import *
 
 def log(message, withTimestamp=False):
     logInfo('signalrManager', message, withTimestamp)
@@ -24,8 +25,15 @@ def updateDefaultOwnerSettings(openAfterDefaultTime, secondsToDefaultBehaviour):
 
 def print_error(error):
     log('error: ', error)
-
 ## SignalR event handlers
+
+## Invoke SignalR events
+def sendNewMailRequest():
+    upload_result = uploadImage()
+    log("Sending newMailRequest event to the mobile device (Imgurl url:{0}, OCR text:{1})".format(upload_result['link'], "OCR PARSED TEXT"))
+    #peepneeHub.server.invoke('newMailRequest', upload_result['link'], "OCR PARSED TEXT")
+## Invoke SignalR events
+
 def initRealTimeUpdatesConnection():
     t1 = threading.Thread(target=startSignalrConnection, args=[])
     t1.setDaemon(True)

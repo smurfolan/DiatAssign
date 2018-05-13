@@ -65,7 +65,7 @@ def buttonPressHandler(channel):
         takingPicture()
         log("Message shown!")
         takePictureWithTheCamera()
-        # TODO:Upload it and send it to Mobile app in different thread
+        sendNewMailRequest()
         countDownFrom(6)
         # TODO:Maybe reset buttons after the countdown
 
