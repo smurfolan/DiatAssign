@@ -19,6 +19,8 @@ PACKAGE_REJECTED = 'packageRejected_132_by_300.jpg'
 # TODO: Need to add embeded counter on this image
 WAIT_FOR_RESPONSE = 'waitForAnswer_132_by_300.jpg'
 
+responseWasSent = False
+
 def showHomeScreen():
     displayPicture(HOME_SCREEN)
     return
@@ -32,18 +34,33 @@ def takingPicture():
     return
 
 def repeatSteps():
+    global responseWasSent
+    responseWasSent = True
+
+    clearPartial()
     displayPicture(REPEAT_STEPS)
+    responseWasSent = False
     return
 
 def dropPackageInside():
+    global responseWasSent
+    responseWasSent = True
+
+    clearPartial()
     displayPicture(DROP_PACKAGE_INSIDE)
+    responseWasSent = False
     return
 
 def packageRejected():
+    global responseWasSent
+    responseWasSent = True
+
+    clearPartial()
     displayPicture(PACKAGE_REJECTED)
+    responseWasSent = False
     return
 
-def countDownFrom(number):
+def clearPartial():
     epd = epd2in9.EPD()
     epd.init(epd.lut_partial_update)
 
@@ -52,13 +69,19 @@ def countDownFrom(number):
     epd.clear_frame_memory(0xFF)
     epd.display_frame()
 
+def countDownFrom(number):
+    global responseWasSent
+
+    clearPartial()
+    epd = epd2in9.EPD()
+
     time_image = Image.new('1', (100, 100), 255)  # 255: clear the frame
     draw = ImageDraw.Draw(time_image)
     font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 56)
     image_width, image_height = time_image.size
 
     counter = number
-    while (counter >= 0):
+    while (counter >= 0 and (not responseWasSent)):
         draw.rectangle((0, 0, image_width, image_height), fill = 255)
         draw.text((0, 0), '0{0}'.format(str(counter)), font = font, fill = 0)
         epd.set_frame_memory(time_image.rotate(270), 0, 120)
@@ -78,6 +101,6 @@ def displayPicture(pictureName):
     epd.set_frame_memory(image, 0, 0)
     epd.display_frame()
 
-    epd.delay_ms(2000)
+    epd.delay_ms(600)
 
     return

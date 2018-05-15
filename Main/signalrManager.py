@@ -3,6 +3,9 @@ from signalr import Connection
 import threading
 from loggingManager import *
 from uploadImageManager import *
+from displayManager import *
+from servoManager import *
+import time
 
 def log(message, withTimestamp=False):
     logInfo('signalrManager', message, withTimestamp)
@@ -12,13 +15,19 @@ HUB_NAME = 'PeepneeHub'
 
 ## SignalR event handlers
 def mailRequestAccepted():
-    log('OMG! Open box using the servoManager. Count 5 seconds and close the box again using the manager.')
+    dropPackageInside()
+    openMailbox()
+    time.sleep(5)
+    closeMailbox()
+    showHomeScreen()
 
 def mailRequestDeclined():
-    log('Hmm! Using the displayManager show message for declined mail.')
+    packageRejected()
+    # TODO: Navigate to home screen
 
 def repeatMailRequest():
-    log('What? Using the displayManager show message repeat is needed. The show home screen.')
+    repeatSteps()
+    # TODO: Sleep for few seconds and show goOnMarkerAndPushButton()
 
 def updateDefaultOwnerSettings(openAfterDefaultTime, secondsToDefaultBehaviour):
     log("Kewl? Update settings to openAfterDefaultTime: {0} and secondsToDefaultBehaviour: {1}".format(openAfterDefaultTime, secondsToDefaultBehaviour))
@@ -29,18 +38,15 @@ def print_error(error):
 
 ## Invoke SignalR events
 def sendNewMailRequest():
-    upload_result = uploadImage()
-    log("Sending newMailRequest event to the mobile device (Imgurl url:{0}, OCR text:{1})".format(upload_result['link'], "OCR PARSED TEXT"))
-    #peepneeHub.server.invoke('newMailRequest', upload_result['link'], "OCR PARSED TEXT")
-## Invoke SignalR events
-
-def initRealTimeUpdatesConnection():
-    t1 = threading.Thread(target=startSignalrConnection, args=[])
+    t1 = threading.Thread(target=sendNewMailRequestInSeparateThread, args=[])
     t1.setDaemon(True)
     t1.start()
+## Invoke SignalR events
 
-def startSignalrConnection():
+def sendNewMailRequestInSeparateThread():
     with Session() as session:
+        upload_result = uploadImage()
+
         #create a connection
         connection = Connection(HUB_HOST_URL, session)
 
@@ -58,7 +64,6 @@ def startSignalrConnection():
         #start a connection
         log("Connection was started", True)
         with connection:
-            #peepneeHub.server.invoke('mailRequestAccepted')
-            #peepneeHub.server.invoke('updateDefaultOwnerSettings', 0, 13)
-            connection.wait(13)
+            peepneeHub.server.invoke('newMailRequest', upload_result['link'], "OCR PARSED TEXT")
+            connection.wait(16)
             log("Connection to SignalR hub was closed!", True)

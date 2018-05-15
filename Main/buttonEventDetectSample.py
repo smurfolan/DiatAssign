@@ -42,6 +42,9 @@ def buttonPressHandler(channel):
     global firstButtonClickRegistered
     global secondButtonClickRegistered
     global firstButtonClickRegisteredAt
+
+    if firstButtonClickRegistered and secondButtonClickRegistered:
+        resetButtonStates()
     log("BUTTON CLICKED")
     if not firstButtonClickRegistered:
         firstButtonClickRegistered = True
@@ -66,19 +69,16 @@ def buttonPressHandler(channel):
         log("Message shown!")
         takePictureWithTheCamera()
         sendNewMailRequest()
-        countDownFrom(6)
-        # TODO:Maybe reset buttons after the countdown
+        countDownFrom(9)
 
 GPIO.add_event_detect(23,GPIO.RISING,callback=buttonPressHandler)
-
-initRealTimeUpdatesConnection()
 
 while(1):
       log("Showing home screen..")
       showHomeScreen()
       log("Home screen shown!")
 
-      keypressed = raw_input('\n\n\n\n\n\n***** MENU ***** \n1. Press \'q\' to quit\n2. Press \'r\' to reset (NOT implemented yet)\n***** MENU *****\n\n\n\n\n\n ')
+      keypressed = raw_input('\n\n\n\n***** MENU ***** \n1. Press \'q\' to quit\n2. Press \'r\' to reset (NOT implemented yet)\n***** MENU *****\n\n\n ')
 
       if keypressed == 'q':
            GPIO.cleanup()
