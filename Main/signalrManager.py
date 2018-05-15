@@ -23,11 +23,13 @@ def mailRequestAccepted():
 
 def mailRequestDeclined():
     packageRejected()
-    # TODO: Navigate to home screen
+    time.sleep(5)
+    showHomeScreen()
 
 def repeatMailRequest():
     repeatSteps()
-    # TODO: Sleep for few seconds and show goOnMarkerAndPushButton()
+    time.sleep(5)
+    goOnMarkerAndPushButton()
 
 def updateDefaultOwnerSettings(openAfterDefaultTime, secondsToDefaultBehaviour):
     log("Kewl? Update settings to openAfterDefaultTime: {0} and secondsToDefaultBehaviour: {1}".format(openAfterDefaultTime, secondsToDefaultBehaviour))
