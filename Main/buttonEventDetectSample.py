@@ -43,16 +43,18 @@ def buttonPressHandler(channel):
     global secondButtonClickRegistered
     global firstButtonClickRegisteredAt
 
+    log("BUTTON CLICKED", True)
+
     if firstButtonClickRegistered and secondButtonClickRegistered:
         resetButtonStates()
-    log("BUTTON CLICKED")
+
     if not firstButtonClickRegistered:
         firstButtonClickRegistered = True
         log("Showing the 'Please stepback and push' message...")
         goOnMarkerAndPushButton()
         log("Message shown!")
         # Start counting the seconds till the second click. If no click was registered
-        t1 = threading.Thread(target=expectSecondClickFor, args=[6])
+        t1 = threading.Thread(target=expectSecondClickFor, args=[15])
         #Background thread will finish with the main program
         t1.setDaemon(True)
         #Start expectSecondClickFor(n) in a separate thread
@@ -71,7 +73,7 @@ def buttonPressHandler(channel):
         sendNewMailRequest()
         countDownFrom(9)
 
-GPIO.add_event_detect(23,GPIO.RISING,callback=buttonPressHandler)
+GPIO.add_event_detect(23,GPIO.RISING,callback=buttonPressHandler,bouncetime= 6000)
 
 while(1):
       log("Showing home screen..")

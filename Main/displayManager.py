@@ -88,7 +88,7 @@ def countDownFrom(number):
         epd.display_frame()
 
         counter = counter - 1
-        time.sleep(1)
+        time.sleep(2)
 
 def displayPicture(pictureName):
 
